@@ -1,0 +1,25 @@
+name: "PR Quality Check"
+
+on:
+  pull_request:
+    types: [opened, edited, synchronized]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Check PR Title"
+        # Garante que o PR siga o padrão: feat: ou fix:
+        if: "!startsWith(github.event.pull_request.title, 'feat:') && !startsWith(github.event.pull_request.title, 'fix:')"
+        run: |
+          echo "ERRO: O título do PR deve começar com 'feat:' ou 'fix:' seguindo o padrão Conventional Commits."
+          exit 1
+
+      - name: "Check Description Length"
+        # Rejeita PRs sem descrição (alunos que deixam vazio)
+        run: |
+          BODY="${{ github.event.pull_request.body }}"
+          if [ ${#BODY} -le 20 ]; then
+            echo "ERRO: Forneça uma descrição detalhada do que foi feito no exercício."
+            exit 1
+          fi
