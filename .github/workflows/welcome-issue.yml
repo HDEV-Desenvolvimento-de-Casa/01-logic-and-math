@@ -1,0 +1,20 @@
+name: "Welcome New Students"
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Comment on New Issue"
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "👋 Olá, futuro Engenheiro! Obrigado por abrir esta Issue na HDEV.\n\nSe for uma dúvida técnica, um mentor ou monitor responderá em breve. Enquanto isso, verifique se você seguiu o nosso `CONTRIBUTING.md`."
+            })
